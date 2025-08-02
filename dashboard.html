@@ -1,0 +1,576 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>QuickDesk - Dashboard</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <script src="https://cdn.socket.io/4.5.4/socket.io.min.js"></script>
+  <style>
+    :root {
+      --primary: #4361ee;
+      --primary-light: #4895ef;
+      --secondary: #3f37c9;
+      --dark: #1b263b;
+      --light: #f8f9fa;
+    }
+    body {
+      font-family: 'Poppins', sans-serif;
+      background-color: #f5f7fa;
+    }
+    .sidebar {
+      background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
+      color: white;
+      box-shadow: 4px 0 10px rgba(0, 0, 0, 0.1);
+    }
+    .nav-link {
+      transition: all 0.2s ease;
+    }
+    .nav-link:hover {
+      background: rgba(255, 255, 255, 0.1);
+    }
+    .active-link {
+      background: rgba(255, 255, 255, 0.2);
+    }
+    .card {
+      background: white;
+      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+      transition: all 0.3s ease;
+    }
+    .card:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 10px 15px rgba(0, 0, 0, 0.1);
+    }
+    .btn-primary {
+      background: var(--primary);
+      transition: all 0.3s ease;
+    }
+    .btn-primary:hover {
+      background: var(--secondary);
+      transform: translateY(-2px);
+      box-shadow: 0 4px 12px rgba(67, 97, 238, 0.25);
+    }
+    .badge {
+      font-size: 0.75rem;
+      padding: 0.25rem 0.75rem;
+      border-radius: 9999px;
+      font-weight: 500;
+    }
+    .badge-open {
+      background: #dbeafe;
+      color: #2563eb;
+    }
+    .badge-closed {
+      background: #dcfce7;
+      color: #16a34a;
+    }
+    .badge-pending {
+      background: #fef9c3;
+      color: #ca8a04;
+    }
+    .badge-high {
+      background: #fee2e2;
+      color: #dc2626;
+    }
+    .badge-medium {
+      background: #fef3c7;
+      color: #d97706;
+    }
+    .badge-low {
+      background: #e0f2fe;
+      color: #0369a1;
+    }
+    .scrollbar-hide::-webkit-scrollbar {
+      display: none;
+    }
+    .animate-pulse {
+      animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+    }
+    @keyframes pulse {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0.5; }
+    }
+  </style>
+</head>
+<body class="flex h-screen overflow-hidden">
+  <!-- Sidebar -->
+  <aside class="sidebar w-64 flex-shrink-0 flex flex-col">
+    <div class="p-6">
+      <div class="flex items-center space-x-3">
+        <img src="assets/logo.svg" alt="QuickDesk Logo" class="w-8 h-8">
+        <span class="text-xl font-bold">QuickDesk</span>
+      </div>
+    </div>
+    
+    <nav class="flex-1 px-4 space-y-1">
+      <a href="index.html" class="nav-link flex items-center space-x-3 py-3 px-4 rounded-lg">
+        <i class="fas fa-users-cog w-5"></i>
+        <span>Home</span>
+      </a>
+      <a href="#" class="active-link nav-link flex items-center space-x-3 py-3 px-4 rounded-lg">
+        <i class="fas fa-tachometer-alt w-5"></i>
+        <span>Dashboard</span>
+      </a>
+      <a href="ticket-create.html" class="nav-link flex items-center space-x-3 py-3 px-4 rounded-lg">
+        <i class="fas fa-plus-circle w-5"></i>
+        <span>Create Ticket</span>
+      </a>
+      <a href="admin.html" class="nav-link flex items-center space-x-3 py-3 px-4 rounded-lg">
+        <i class="fas fa-users-cog w-5"></i>
+        <span>Admin Panel</span>
+      </a>
+      <a href="ticket-details.html" class="nav-link flex items-center space-x-3 py-3 px-4 rounded-lg">
+        <i class="fas fa-users-cog w-5"></i>
+        <span>Ticket Details</span>
+      </a>
+      
+    <div class="p-6 border-t border-white border-opacity-10">
+      <div class="flex items-center space-x-3">
+        <img src="https://randomuser.me/api/portraits/men/32.jpg" alt="User" class="w-10 h-10 rounded-full">
+        <div class="flex-1">
+          <div class="font-medium" id="userNameDisplay">John Doe</div>
+          <div class="text-xs text-white text-opacity-70">Admin</div>
+        </div>
+        <button onclick="logout()" class="text-white text-opacity-70 hover:text-opacity-100" title="Logout">
+          <i class="fas fa-sign-out-alt"></i>
+        </button>
+      </div>
+    </div>
+  </aside>
+
+  <!-- Main Content -->
+  <div class="flex-1 flex flex-col overflow-hidden">
+    <!-- Top Navigation -->
+    <header class="bg-white shadow-sm">
+      <div class="flex items-center justify-between px-6 py-4">
+        <h1 class="text-2xl font-bold text-gray-800">Dashboard Overview</h1>
+        <div class="flex items-center space-x-4">
+          <div class="relative">
+            <input 
+              type="text" 
+              placeholder="Search tickets..." 
+              class="pl-10 pr-4 py-2 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+            >
+            <i class="fas fa-search absolute left-3 top-2.5 text-gray-400"></i>
+          </div>
+          <button class="relative p-2 text-gray-500 hover:text-gray-700" title="Notifications">
+            <i class="fas fa-bell"></i>
+            <span class="absolute top-0 right-0 w-2 h-2 bg-red-500 rounded-full"></span>
+          </button>
+        </div>
+      </div>
+    </header>
+
+    <!-- Main Content Area -->
+    <main class="flex-1 overflow-y-auto p-6 bg-gray-50">
+      <!-- Stats Cards -->
+      <div class="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
+        <div class="card p-6">
+          <div class="flex items-center justify-between">
+            <div>
+              <p class="text-sm text-gray-500">Open Tickets</p>
+              <h3 id="openTickets" class="text-3xl font-bold mt-1 animate-pulse">--</h3>
+            </div>
+            <div class="p-3 rounded-full bg-blue-100 text-blue-600">
+              <i class="fas fa-ticket-alt"></i>
+            </div>
+          </div>
+          <div class="mt-4">
+            <span class="badge badge-open">+2 today</span>
+          </div>
+        </div>
+        
+        <div class="card p-6">
+          <div class="flex items-center justify-between">
+            <div>
+              <p class="text-sm text-gray-500">Closed Today</p>
+              <h3 id="closedTickets" class="text-3xl font-bold mt-1 animate-pulse">--</h3>
+            </div>
+            <div class="p-3 rounded-full bg-green-100 text-green-600">
+              <i class="fas fa-check-circle"></i>
+            </div>
+          </div>
+          <div class="mt-4">
+            <span class="badge badge-closed">+12% from yesterday</span>
+          </div>
+        </div>
+        
+        <div class="card p-6">
+          <div class="flex items-center justify-between">
+            <div>
+              <p class="text-sm text-gray-500">Avg. Response Time</p>
+              <h3 id="avgResponse" class="text-3xl font-bold mt-1 animate-pulse">--</h3>
+            </div>
+            <div class="p-3 rounded-full bg-yellow-100 text-yellow-600">
+              <i class="fas fa-clock"></i>
+            </div>
+          </div>
+          <div class="mt-4">
+            <span class="badge badge-pending">Goal: < 2h</span>
+          </div>
+        </div>
+        
+        <div class="card p-6">
+          <div class="flex items-center justify-between">
+            <div>
+              <p class="text-sm text-gray-500">Customer Satisfaction</p>
+              <h3 id="satisfaction" class="text-3xl font-bold mt-1 animate-pulse">--</h3>
+            </div>
+            <div class="p-3 rounded-full bg-purple-100 text-purple-600">
+              <i class="fas fa-smile"></i>
+            </div>
+          </div>
+          <div class="mt-4">
+            <span class="badge badge-high">+5% this week</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Charts Row -->
+      <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-8">
+        <div class="card p-6">
+          <div class="flex items-center justify-between mb-4">
+            <h2 class="text-lg font-semibold">Tickets by Status</h2>
+            <select class="text-sm border border-gray-200 rounded px-2 py-1" aria-label="Filter tickets by status date range">
+              <option>Last 7 days</option>
+              <option>Last 30 days</option>
+              <option>This year</option>
+            </select>
+          </div>
+          <canvas id="statusChart" height="250"></canvas>
+        </div>
+        
+        <div class="card p-6">
+          <div class="flex items-center justify-between mb-4">
+            <h2 class="text-lg font-semibold">Tickets by Priority</h2>
+            <select class="text-sm border border-gray-200 rounded px-2 py-1" aria-label="Filter tickets by priority date range">
+              <option>Last 7 days</option>
+              <option>Last 30 days</option>
+              <option>This year</option>
+            </select>
+          </div>
+          <canvas id="priorityChart" height="250"></canvas>
+        </div>
+      </div>
+
+      <!-- Ticket Actions -->
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
+        <div class="card p-6">
+          <div class="flex items-center mb-4">
+            <div class="p-3 rounded-full bg-blue-100 text-blue-600 mr-4">
+              <i class="fas fa-eye text-xl"></i>
+            </div>
+            <div>
+              <h3 class="text-lg font-semibold">View Ticket Details</h3>
+              <p class="text-sm text-gray-500">Access detailed information about any ticket</p>
+            </div>
+          </div>
+          <div class="mt-4">
+            <a href="ticket-details.html" class="btn-primary inline-block px-4 py-2 rounded-lg font-medium text-white">
+              View Ticket Details
+            </a>
+          </div>
+        </div>
+        
+        <div class="card p-6">
+          <div class="flex items-center mb-4">
+            <div class="p-3 rounded-full bg-green-100 text-green-600 mr-4">
+              <i class="fas fa-plus-circle text-xl"></i>
+            </div>
+            <div>
+              <h3 class="text-lg font-semibold">Create New Ticket</h3>
+              <p class="text-sm text-gray-500">Submit a new support request or issue</p>
+            </div>
+          </div>
+          <div class="mt-4">
+            <a href="ticket-create.html" class="btn-primary inline-block px-4 py-2 rounded-lg font-medium text-white">
+              Create Ticket
+            </a>
+          </div>
+        </div>
+      </div>
+
+      <!-- Recent Tickets -->
+      <div class="card overflow-hidden mb-8">
+        <div class="flex items-center justify-between p-6 border-b">
+          <h2 class="text-lg font-semibold">Recent Tickets</h2>
+          <a href="ticket-create.html" class="text-sm text-blue-600 hover:underline">View all</a>
+        </div>
+        <div class="overflow-x-auto">
+          <table class="min-w-full divide-y divide-gray-200">
+            <thead class="bg-gray-50">
+              <tr>
+                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">ID</th>
+                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Title</th>
+                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Status</th>
+                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Priority</th>
+                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Created</th>
+                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Actions</th>
+              </tr>
+            </thead>
+            <tbody id="ticketTable" class="bg-white divide-y divide-gray-200">
+              <!-- Tickets will be loaded here -->
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- Activity Feed -->
+      <div class="card">
+        <div class="flex items-center justify-between p-6 border-b">
+          <h2 class="text-lg font-semibold">Recent Activity</h2>
+          <a href="#" class="text-sm text-blue-600 hover:underline">View all</a>
+        </div>
+        <div class="p-6">
+          <ul id="activityFeed" class="space-y-4">
+            <!-- Activity items will be loaded here -->
+          </ul>
+        </div>
+      </div>
+    </main>
+  </div>
+
+  <script>
+    // Initialize WebSocket connection
+    const socket = io('http://localhost:5000');
+    
+    // Enhanced authentication check
+    function checkAuth() {
+      const isAuthenticated = sessionStorage.getItem('isAuthenticated') || localStorage.getItem('isAuthenticated');
+      const userName = sessionStorage.getItem('userName') || localStorage.getItem('userName');
+      
+      if (!isAuthenticated) {
+        window.location.href = 'login.html';
+        return false;
+      }
+      
+      // Update user name display if available
+      if (userName) {
+        document.getElementById('userNameDisplay').textContent = userName;
+      }
+      
+      return true;
+    }
+
+    // Run check on page load
+    if (!checkAuth()) {
+      // Redirect will happen automatically
+      throw new Error('Not authenticated');
+    }
+
+    // Sample data - replace with actual API calls
+    let tickets = [];
+    let activityLogs = [];
+
+    // DOM Elements
+    const ticketTable = document.getElementById('ticketTable');
+    const activityFeed = document.getElementById('activityFeed');
+    const openTicketsEl = document.getElementById('openTickets');
+    const closedTicketsEl = document.getElementById('closedTickets');
+    const avgResponseEl = document.getElementById('avgResponse');
+    const satisfactionEl = document.getElementById('satisfaction');
+
+    // Initialize charts
+    const statusChart = new Chart(
+      document.getElementById('statusChart').getContext('2d'),
+      {
+        type: 'doughnut',
+        data: {
+          labels: ['Open', 'Closed', 'Pending'],
+          datasets: [{
+            data: [0, 0, 0],
+            backgroundColor: ['#3B82F6', '#10B981', '#F59E0B'],
+            borderWidth: 0
+          }]
+        },
+        options: {
+          cutout: '70%',
+          plugins: {
+            legend: {
+              position: 'bottom',
+              labels: {
+                boxWidth: 12,
+                padding: 20
+              }
+            }
+          }
+        }
+      }
+    );
+
+    const priorityChart = new Chart(
+      document.getElementById('priorityChart').getContext('2d'),
+      {
+        type: 'bar',
+        data: {
+          labels: ['High', 'Medium', 'Low'],
+          datasets: [{
+            data: [0, 0, 0],
+            backgroundColor: ['#EF4444', '#F59E0B', '#3B82F6'],
+            borderRadius: 4
+          }]
+        },
+        options: {
+          scales: {
+            y: {
+              beginAtZero: true,
+              grid: {
+                display: false
+              }
+            },
+            x: {
+              grid: {
+                display: false
+              }
+            }
+          },
+          plugins: {
+            legend: {
+              display: false
+            }
+          }
+        }
+      }
+    );
+
+    // Fetch initial data
+    async function fetchData() {
+      try {
+        // Fetch tickets
+        const ticketsResponse = await fetch('http://localhost:5000/api/tickets', {
+          headers: {
+            'Authorization': 'Bearer AdminToken'
+          }
+        });
+        const ticketsData = await ticketsResponse.json();
+        tickets = ticketsData.data || ticketsData; // Handle both response formats
+        
+        // Fetch stats
+        const statsResponse = await fetch('http://localhost:5000/api/stats', {
+          headers: {
+            'Authorization': 'Bearer AdminToken'
+          }
+        });
+        const stats = await statsResponse.json();
+        
+        // For activity logs, we'll use a simplified approach
+        activityLogs = [
+          "System initialized",
+          "New tickets created",
+          "Users logged in",
+          "Tickets updated",
+          "Reports generated"
+        ];
+
+        updateDashboard();
+      } catch (error) {
+        console.error("Error fetching data:", error);
+        // Fallback to sample data if API fails
+        tickets = [
+          {id: 101, title: "Login issues on mobile app", status: "Open", priority: "High", created: "2023-06-15", createdBy: "John Smith"},
+          {id: 102, title: "Feature request: Dark mode", status: "Pending", priority: "Medium", created: "2023-06-14", createdBy: "Sarah Johnson"},
+          {id: 103, title: "Payment gateway error", status: "Closed", priority: "High", created: "2023-06-14", createdBy: "Mike Brown"},
+          {id: 104, title: "Password reset not working", status: "Open", priority: "Medium", created: "2023-06-13", createdBy: "Emily Davis"},
+          {id: 105, title: "Dashboard loading slowly", status: "Open", priority: "Low", created: "2023-06-12", createdBy: "Alex Wilson"}
+        ];
+      }
+    }
+
+    // Update dashboard with current data
+    function updateDashboard() {
+      // Update stats
+      const openTickets = tickets.filter(t => t.status === 'Open').length;
+      const closedTickets = tickets.filter(t => t.status === 'Closed').length;
+      
+      openTicketsEl.textContent = openTickets;
+      openTicketsEl.classList.remove('animate-pulse');
+      closedTicketsEl.textContent = closedTickets;
+      closedTicketsEl.classList.remove('animate-pulse');
+      avgResponseEl.textContent = "1h 24m";
+      avgResponseEl.classList.remove('animate-pulse');
+      satisfactionEl.textContent = "92%";
+      satisfactionEl.classList.remove('animate-pulse');
+
+      // Update charts
+      statusChart.data.datasets[0].data = [
+        openTickets,
+        closedTickets,
+        tickets.filter(t => t.status === 'Pending').length
+      ];
+      statusChart.update();
+
+      priorityChart.data.datasets[0].data = [
+        tickets.filter(t => t.priority === 'High').length,
+        tickets.filter(t => t.priority === 'Medium').length,
+        tickets.filter(t => t.priority === 'Low').length
+      ];
+      priorityChart.update();
+
+      // Update ticket table
+      ticketTable.innerHTML = tickets.map(ticket => `
+        <tr>
+          <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">${ticket.id}</td>
+          <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">${ticket.title}</td>
+          <td class="px-6 py-4 whitespace-nowrap">
+            <span class="badge ${ticket.status === 'Open' ? 'badge-open' : ticket.status === 'Closed' ? 'badge-closed' : 'badge-pending'}">
+              ${ticket.status}
+            </span>
+          </td>
+          <td class="px-6 py-4 whitespace-nowrap">
+            <span class="badge ${ticket.priority === 'High' ? 'badge-high' : ticket.priority === 'Medium' ? 'badge-medium' : 'badge-low'}">
+              ${ticket.priority}
+            </span>
+          </td>
+          <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">${ticket.created}</td>
+          <td class="px-6 py-4 whitespace-nowrap text-sm font-medium">
+            <a href="ticket-details.html?id=${ticket.id}" class="text-blue-600 hover:text-blue-900">View</a>
+          </td>
+        </tr>
+      `).join('');
+
+      // Update activity feed
+      activityFeed.innerHTML = activityLogs.map(log => `
+        <li class="flex items-start">
+          <div class="flex-shrink-0 h-2 w-2 mt-2 bg-blue-500 rounded-full"></div>
+          <div class="ml-3 flex-1">
+            <p class="text-sm text-gray-700">${log}</p>
+            <p class="text-xs text-gray-500 mt-1">Just now</p>
+          </div>
+        </li>
+      `).join('');
+    }
+
+    // WebSocket event listeners
+    socket.on('ticket_update', (ticket) => {
+      const index = tickets.findIndex(t => t.id === ticket.id);
+      if (index >= 0) {
+        tickets[index] = ticket;
+      } else {
+        tickets.unshift(ticket);
+      }
+      updateDashboard();
+    });
+
+    socket.on('log_update', (log) => {
+      activityLogs.unshift(log);
+      if (activityLogs.length > 5) activityLogs.pop();
+      updateDashboard();
+    });
+
+    // Logout function
+    function logout() {
+      sessionStorage.removeItem('isAuthenticated');
+      localStorage.removeItem('isAuthenticated');
+      localStorage.removeItem('userName');
+      sessionStorage.removeItem('userName');
+      window.location.href = 'login.html';
+    }
+
+    // Initialize
+    fetchData();
+  </script>
+</body>
+</html>

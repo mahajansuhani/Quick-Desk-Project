@@ -1,0 +1,427 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>QuickDesk | Create New Ticket</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <style>
+    :root {
+      --primary: #4361ee;
+      --primary-light: #4895ef;
+      --secondary: #3f37c9;
+      --error: #ef233c;
+      --success: #4cc9f0;
+    }
+    
+    body {
+      font-family: 'Poppins', sans-serif;
+      background-color: #f8fafc;
+    }
+    
+    .sidebar {
+      background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
+      color: white;
+      box-shadow: 4px 0 10px rgba(0, 0, 0, 0.1);
+    }
+    
+    .nav-link {
+      transition: all 0.2s ease;
+    }
+    
+    .nav-link:hover {
+      background: rgba(255, 255, 255, 0.1);
+    }
+    
+    .active-link {
+      background: rgba(255, 255, 255, 0.2);
+    }
+    
+    .ticket-card {
+      background: white;
+      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+      transition: all 0.3s ease;
+    }
+    
+    .ticket-card:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 10px 15px rgba(0, 0, 0, 0.1);
+    }
+    
+    .input-field {
+      transition: all 0.3s ease;
+      border: 1px solid #e2e8f0;
+    }
+    
+    .input-field:focus {
+      border-color: var(--primary);
+      box-shadow: 0 0 0 3px rgba(67, 97, 238, 0.15);
+    }
+    
+    .btn-primary {
+      background: var(--primary);
+      transition: all 0.3s ease;
+    }
+    
+    .btn-primary:hover {
+      background: var(--secondary);
+      transform: translateY(-2px);
+      box-shadow: 0 4px 12px rgba(67, 97, 238, 0.25);
+    }
+    
+    .file-upload {
+      border: 2px dashed #e2e8f0;
+      transition: all 0.3s ease;
+    }
+    
+    .file-upload:hover {
+      border-color: var(--primary);
+      background: rgba(67, 97, 238, 0.05);
+    }
+    
+    .file-upload-active {
+      border-color: var(--primary);
+      background: rgba(67, 97, 238, 0.05);
+    }
+    
+    .shake {
+      animation: shake 0.5s cubic-bezier(.36,.07,.19,.97) both;
+    }
+    
+    @keyframes shake {
+      10%, 90% { transform: translateX(-1px); }
+      20%, 80% { transform: translateX(2px); }
+      30%, 50%, 70% { transform: translateX(-4px); }
+      40%, 60% { transform: translateX(4px); }
+    }
+    
+    .rich-text-editor {
+      min-height: 200px;
+      border: 1px solid #e2e8f0;
+      border-radius: 0.5rem;
+      padding: 1rem;
+    }
+    
+    .rich-text-editor:focus {
+      outline: none;
+      border-color: var(--primary);
+      box-shadow: 0 0 0 3px rgba(67, 97, 238, 0.15);
+    }
+  </style>
+</head>
+<body class="flex h-screen overflow-hidden">
+  <!-- Sidebar -->
+  <aside class="sidebar w-64 flex-shrink-0 flex flex-col">
+    <div class="p-6">
+      <div class="flex items-center space-x-3">
+        <img src="assets/logo.svg" alt="QuickDesk Logo" class="w-8 h-8">
+        <span class="text-xl font-bold">QuickDesk</span>
+      </div>
+    </div>
+    
+    <nav class="flex-1 px-4 space-y-1">
+      <a href="dashboard.html" class="nav-link flex items-center space-x-3 py-3 px-4 rounded-lg">
+        <i class="fas fa-tachometer-alt w-5"></i>
+        <span>Dashboard</span>
+      </a>
+      <a href="#" class="active-link nav-link flex items-center space-x-3 py-3 px-4 rounded-lg">
+        <i class="fas fa-plus-circle w-5"></i>
+        <span>Create Ticket</span>
+      </a>
+      <a href="admin.html" class="nav-link flex items-center space-x-3 py-3 px-4 rounded-lg">
+        <i class="fas fa-users-cog w-5"></i>
+        <span>Admin Panel</span>
+      </a>
+      <a href="#" class="nav-link flex items-center space-x-3 py-3 px-4 rounded-lg">
+        <i class="fas fa-chart-bar w-5"></i>
+        <span>Reports</span>
+      </a>
+    </nav>
+    
+    <div class="p-6 border-t border-white border-opacity-10">
+      <div class="flex items-center space-x-3">
+        <img src="https://randomuser.me/api/portraits/men/32.jpg" alt="User" class="w-10 h-10 rounded-full">
+        <div class="flex-1">
+          <div class="font-medium">John Doe</div>
+          <div class="text-xs text-white text-opacity-70">Admin</div>
+        </div>
+        <button onclick="logout()" class="text-white text-opacity-70 hover:text-opacity-100">
+          <i class="fas fa-sign-out-alt"></i>
+        </button>
+      </div>
+    </div>
+  </aside>
+
+  <!-- Main Content -->
+  <div class="flex-1 flex flex-col overflow-hidden">
+    <!-- Top Navigation -->
+    <header class="bg-white shadow-sm">
+      <div class="flex items-center justify-between px-6 py-4">
+        <div>
+          <h1 class="text-xl font-bold text-gray-800">Create New Ticket</h1>
+          <nav class="flex space-x-2 text-sm text-gray-500">
+            <a href="dashboard.html" class="hover:text-blue-600">Dashboard</a>
+            <span>/</span>
+            <span class="text-blue-600">New Ticket</span>
+          </nav>
+        </div>
+        <div class="flex items-center space-x-4">
+          <button class="relative p-2 text-gray-500 hover:text-gray-700">
+            <i class="fas fa-bell"></i>
+            <span class="absolute top-0 right-0 w-2 h-2 bg-red-500 rounded-full"></span>
+          </button>
+        </div>
+      </div>
+    </header>
+
+    <!-- Main Content Area -->
+    <main class="flex-1 overflow-y-auto p-6 bg-gray-50">
+      <div class="max-w-4xl mx-auto">
+        <div class="ticket-card rounded-xl p-8 mb-6">
+          <form id="ticketForm">
+            <!-- Ticket Title -->
+            <div class="mb-6">
+              <label for="ticketTitle" class="block text-sm font-medium text-gray-700 mb-2">Ticket Title*</label>
+              <input
+                type="text"
+                id="ticketTitle"
+                name="ticketTitle"
+                required
+                placeholder="Briefly describe your issue"
+                class="input-field block w-full rounded-lg py-3 px-4 focus:outline-none"
+              >
+            </div>
+            
+            <!-- Description -->
+            <div class="mb-6">
+              <label for="ticketDescription" class="block text-sm font-medium text-gray-700 mb-2">Description*</label>
+              <div id="ticketDescription" class="rich-text-editor" contenteditable="true"></div>
+              <p class="mt-1 text-xs text-gray-500">Describe your issue in detail. Include error messages, steps to reproduce, and expected behavior.</p>
+            </div>
+            
+            <!-- Category and Priority -->
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
+              <div>
+                <label for="ticketCategory" class="block text-sm font-medium text-gray-700 mb-2">Category*</label>
+                <select id="ticketCategory" name="ticketCategory" required class="input-field block w-full rounded-lg py-3 px-4 focus:outline-none">
+                  <option value="">Select a category</option>
+                  <option value="technical">Technical Issue</option>
+                  <option value="billing">Billing Inquiry</option>
+                  <option value="account">Account Problem</option>
+                  <option value="feature">Feature Request</option>
+                  <option value="other">Other</option>
+                </select>
+              </div>
+              <div>
+                <label for="ticketPriority" class="block text-sm font-medium text-gray-700 mb-2">Priority*</label>
+                <select id="ticketPriority" name="ticketPriority" required class="input-field block w-full rounded-lg py-3 px-4 focus:outline-none">
+                  <option value="">Select priority level</option>
+                  <option value="low">Low</option>
+                  <option value="medium">Medium</option>
+                  <option value="high">High</option>
+                  <option value="critical">Critical</option>
+                </select>
+              </div>
+            </div>
+            
+            <!-- Attachments -->
+            <div class="mb-6">
+              <label class="block text-sm font-medium text-gray-700 mb-2">Attachments</label>
+              <div id="fileUpload" class="file-upload rounded-lg p-6 text-center cursor-pointer">
+                <input type="file" id="ticketAttachments" name="ticketAttachments" multiple class="hidden">
+                <i class="fas fa-cloud-upload-alt text-3xl text-gray-400 mb-2"></i>
+                <p class="text-sm text-gray-600">Drag & drop files here or click to browse</p>
+                <p class="text-xs text-gray-400 mt-1">Supports: JPG, PNG, PDF, DOC (Max 10MB each)</p>
+              </div>
+              <div id="filePreview" class="mt-3 space-y-2 hidden">
+                <div class="flex items-center justify-between bg-gray-50 p-3 rounded-lg">
+                  <div class="flex items-center">
+                    <i class="fas fa-file-alt text-gray-400 mr-3"></i>
+                    <div>
+                      <div class="text-sm font-medium" id="fileName">example.pdf</div>
+                      <div class="text-xs text-gray-500" id="fileSize">2.4 MB</div>
+                    </div>
+                  </div>
+                  <button type="button" class="text-red-500 hover:text-red-700">
+                    <i class="fas fa-times"></i>
+                  </button>
+                </div>
+              </div>
+            </div>
+            
+            <!-- Additional Options -->
+            <div class="mb-8">
+              <label class="block text-sm font-medium text-gray-700 mb-3">Additional Options</label>
+              <div class="space-y-3">
+                <div class="flex items-center">
+                  <input
+                    id="notifyMe"
+                    name="notifyMe"
+                    type="checkbox"
+                    checked
+                    class="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded"
+                  >
+                  <label for="notifyMe" class="ml-2 block text-sm text-gray-700">Notify me when this ticket is updated</label>
+                </div>
+                <div class="flex items-center">
+                  <input
+                    id="assignToMe"
+                    name="assignToMe"
+                    type="checkbox"
+                    class="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded"
+                  >
+                  <label for="assignToMe" class="ml-2 block text-sm text-gray-700">Assign this ticket to me</label>
+                </div>
+              </div>
+            </div>
+            
+            <!-- Form Actions -->
+            <div class="flex flex-col sm:flex-row justify-end space-y-3 sm:space-y-0 sm:space-x-3">
+              <button type="button" class="px-6 py-3 border border-gray-300 rounded-lg font-medium text-gray-700 hover:bg-gray-50">
+                Save as Draft
+              </button>
+              <button type="submit" id="submitTicket" class="btn-primary px-6 py-3 rounded-lg font-medium text-white flex items-center justify-center">
+                <span id="btnText">Submit Ticket</span>
+                <i id="btnSpinner" class="fas fa-spinner fa-spin ml-2 hidden"></i>
+              </button>
+            </div>
+          </form>
+        </div>
+        
+        <!-- Help Card -->
+        <div class="ticket-card rounded-xl p-6 bg-blue-50 border border-blue-100">
+          <div class="flex items-start">
+            <div class="flex-shrink-0 text-blue-500 mt-1 mr-3">
+              <i class="fas fa-info-circle text-xl"></i>
+            </div>
+            <div>
+              <h3 class="text-lg font-medium text-blue-800 mb-1">Need help with your ticket?</h3>
+              <p class="text-sm text-blue-700">
+                For urgent issues, please call our support line at <a href="tel:+18005551234" class="font-semibold hover:underline">1-800-555-1234</a>.
+                Our average response time for high priority tickets is 15 minutes.
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </main>
+  </div>
+
+  <script>
+    // Check authentication
+    if (!localStorage.getItem('isAuthenticated')) {
+      window.location.href = 'login.html';
+    }
+
+    // DOM Elements
+    const ticketForm = document.getElementById('ticketForm');
+    const fileUpload = document.getElementById('fileUpload');
+    const ticketAttachments = document.getElementById('ticketAttachments');
+    const filePreview = document.getElementById('filePreview');
+    const submitBtn = document.getElementById('submitTicket');
+    const btnText = document.getElementById('btnText');
+    const btnSpinner = document.getElementById('btnSpinner');
+
+    // File upload handling
+    fileUpload.addEventListener('click', () => ticketAttachments.click());
+    
+    // Drag and drop functionality
+    fileUpload.addEventListener('dragover', (e) => {
+      e.preventDefault();
+      fileUpload.classList.add('file-upload-active');
+    });
+    
+    fileUpload.addEventListener('dragleave', () => {
+      fileUpload.classList.remove('file-upload-active');
+    });
+    
+    fileUpload.addEventListener('drop', (e) => {
+      e.preventDefault();
+      fileUpload.classList.remove('file-upload-active');
+      if (e.dataTransfer.files.length) {
+        ticketAttachments.files = e.dataTransfer.files;
+        updateFilePreview();
+      }
+    });
+    
+    ticketAttachments.addEventListener('change', updateFilePreview);
+    
+    function updateFilePreview() {
+      if (ticketAttachments.files.length > 0) {
+        const file = ticketAttachments.files[0];
+        const fileName = document.getElementById('fileName');
+        const fileSize = document.getElementById('fileSize');
+        
+        fileName.textContent = file.name;
+        fileSize.textContent = `${(file.size / 1024 / 1024).toFixed(1)} MB`;
+        
+        // Update icon based on file type
+        const fileIcon = filePreview.querySelector('i');
+        if (file.type.includes('image')) {
+          fileIcon.className = 'fas fa-file-image text-gray-400 mr-3';
+        } else if (file.type.includes('pdf')) {
+          fileIcon.className = 'fas fa-file-pdf text-gray-400 mr-3';
+        } else if (file.type.includes('word') || file.type.includes('document')) {
+          fileIcon.className = 'fas fa-file-word text-gray-400 mr-3';
+        } else {
+          fileIcon.className = 'fas fa-file-alt text-gray-400 mr-3';
+        }
+        
+        filePreview.classList.remove('hidden');
+      } else {
+        filePreview.classList.add('hidden');
+      }
+    }
+    
+    // Remove file
+    filePreview.querySelector('button').addEventListener('click', () => {
+      ticketAttachments.value = '';
+      filePreview.classList.add('hidden');
+    });
+
+    // Form submission
+    ticketForm.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      
+      // Show loading state
+      submitBtn.disabled = true;
+      btnText.textContent = 'Submitting...';
+      btnSpinner.classList.remove('hidden');
+      
+      try {
+        // Get form values
+        const title = document.getElementById('ticketTitle').value;
+        const description = document.getElementById('ticketDescription').innerHTML;
+        const category = document.getElementById('ticketCategory').value;
+        const priority = document.getElementById('ticketPriority').value;
+        const notifyMe = document.getElementById('notifyMe').checked;
+        const assignToMe = document.getElementById('assignToMe').checked;
+        
+        // Validate required fields
+        if (!title || !description || !category || !priority) {
+          throw new Error('Please fill in all required fields');
+        }
+        
+        // Simulate API call (replace with actual fetch)
+        await new Promise(resolve => setTimeout(resolve, 1500));
+        
+        // Success - redirect to ticket view
+        window.location.href = 'ticket-details.html?id=new';
+      } catch (error) {
+        alert(error.message);
+        submitBtn.disabled = false;
+        btnText.textContent = 'Submit Ticket';
+        btnSpinner.classList.add('hidden');
+      }
+    });
+
+    // Logout function
+    function logout() {
+      localStorage.removeItem('isAuthenticated');
+      window.location.href = 'login.html';
+    }
+  </script>
+</body>
+</html>

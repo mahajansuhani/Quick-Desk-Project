@@ -1,0 +1,438 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>QuickDesk - Modern Help Desk Solution</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <style>
+    :root {
+      --primary: #4361ee;
+      --primary-light: #4895ef;
+      --secondary: #3f37c9;
+      --dark: #1b263b;
+      --light: #f8f9fa;
+    }
+    body {
+      font-family: 'Poppins', sans-serif;
+      background-color: var(--light);
+      color: var(--dark);
+    }
+    .gradient-bg {
+      background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
+    }
+    .hero-section {
+      background: linear-gradient(rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.7)), 
+                  url('https://images.unsplash.com/photo-1551434678-e076c223a692?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1470&q=80');
+      background-size: cover;
+      background-position: center;
+    }
+    .feature-card {
+      transition: all 0.3s ease;
+      border: 1px solid rgba(0, 0, 0, 0.05);
+    }
+    .feature-card:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1);
+    }
+    .btn-primary {
+      background: var(--primary);
+      transition: all 0.3s ease;
+    }
+    .btn-primary:hover {
+      background: var(--secondary);
+      transform: translateY(-2px);
+      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    }
+    .btn-outline {
+      border: 2px solid var(--primary);
+      color: var(--primary);
+      transition: all 0.3s ease;
+    }
+    .btn-outline:hover {
+      background: var(--primary);
+      color: white;
+    }
+    .nav-link {
+      position: relative;
+    }
+    .nav-link:after {
+      content: '';
+      position: absolute;
+      width: 0;
+      height: 2px;
+      bottom: -2px;
+      left: 0;
+      background: var(--primary);
+      transition: width 0.3s ease;
+    }
+    .nav-link:hover:after {
+      width: 100%;
+    }
+    .floating {
+      animation: floating 3s ease-in-out infinite;
+    }
+    @keyframes floating {
+      0%, 100% { transform: translateY(0); }
+      50% { transform: translateY(-10px); }
+    }
+  </style>
+</head>
+<body>
+  <!-- Navigation -->
+  <nav class="bg-white shadow-sm sticky top-0 z-50">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="flex justify-between h-20 items-center">
+        <div class="flex items-center space-x-2">
+          <img src="assets/logo.svg" alt="QuickDesk Logo" class="h-8 w-8">
+          <span class="text-2xl font-bold text-gray-800">QuickDesk</span>
+        </div>
+        
+        <div class="hidden md:flex items-center space-x-8">
+          <a href="#features" class="nav-link text-gray-600 hover:text-gray-900">Features</a>
+          <a href="#solutions" class="nav-link text-gray-600 hover:text-gray-900">Solutions</a>
+          <a href="admin.html" class="nav-link text-gray-600 hover:text-gray-900">Admin Panel</a>
+          <a href="dashboard.html" class="nav-link text-gray-600 hover:text-gray-900">Dashboard</a>
+        </div>
+        
+        <div class="flex items-center space-x-4">
+          <a href="login.html" class="nav-link text-gray-600 hover:text-gray-900">Login</a>
+          <a href="register.html" class="nav-link text-gray-600 hover:text-gray-900">Register</a>
+        </div>
+        
+        <!-- Mobile menu button -->
+        <button class="md:hidden text-gray-500 hover:text-gray-900" aria-label="Open navigation menu">
+          <i class="fas fa-bars text-xl"></i>
+        </button>
+      </div>
+    </div>
+  </nav>
+
+  <!-- Hero Section -->
+  <section class="hero-section text-white">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-32 text-center">
+      <h1 class="text-4xl md:text-6xl font-bold mb-6 leading-tight">
+        Modern Help Desk <br> 
+        <span class="text-blue-300">Made Simple</span>
+      </h1>
+      <p class="text-xl md:text-2xl mb-10 max-w-3xl mx-auto opacity-90">
+        Streamline your support process with our intuitive ticketing system designed for teams of all sizes.
+      </p>
+      <div class="flex flex-col sm:flex-row justify-center gap-4">
+        <a href="register.html" class="btn-primary text-white px-8 py-4 rounded-lg font-semibold text-lg">
+          Start Free Trial <i class="fas fa-arrow-right ml-2"></i>
+        </a>
+        <a href="#demo" class="btn-outline px-8 py-4 rounded-lg font-semibold text-lg">
+          Watch Demo <i class="fas fa-play-circle ml-2"></i>
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <!-- Trusted By Section -->
+  <section class="bg-gray-50 py-12">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <p class="text-center text-gray-500 mb-8">TRUSTED BY TEAMS AT</p>
+      <div class="grid grid-cols-2 md:grid-cols-5 gap-8 items-center justify-center">
+        <img src="https://via.placeholder.com/150x50?text=Company+1" alt="Company Logo" class="h-8 opacity-60 mx-auto">
+        <img src="https://via.placeholder.com/150x50?text=Company+2" alt="Company Logo" class="h-10 opacity-60 mx-auto">
+        <img src="https://via.placeholder.com/150x50?text=Company+3" alt="Company Logo" class="h-12 opacity-60 mx-auto">
+        <img src="https://via.placeholder.com/150x50?text=Company+4" alt="Company Logo" class="h-8 opacity-60 mx-auto">
+        <img src="https://via.placeholder.com/150x50?text=Company+5" alt="Company Logo" class="h-10 opacity-60 mx-auto">
+      </div>
+    </div>
+  </section>
+
+  <!-- Features Section -->
+  <section id="features" class="py-20">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="text-center mb-16">
+        <h2 class="text-3xl md:text-4xl font-bold mb-4">Powerful Features</h2>
+        <p class="text-xl text-gray-600 max-w-2xl mx-auto">
+          Everything you need to deliver exceptional customer support
+        </p>
+      </div>
+      
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+        <!-- Feature 1 -->
+        <div class="feature-card bg-white p-8 rounded-xl">
+          <div class="text-blue-500 mb-6 text-4xl">
+            <i class="fas fa-tachometer-alt"></i>
+          </div>
+          <h3 class="text-xl font-bold mb-3">Real-time Dashboard</h3>
+          <p class="text-gray-600 mb-4">
+            Monitor all your support tickets in one place with our intuitive dashboard that updates in real-time.
+          </p>
+          <a href="#" class="text-blue-500 font-medium inline-flex items-center">
+            Learn more <i class="fas fa-arrow-right ml-2"></i>
+          </a>
+        </div>
+        
+        <!-- Feature 2 -->
+        <div class="feature-card bg-white p-8 rounded-xl">
+          <div class="text-blue-500 mb-6 text-4xl">
+            <i class="fas fa-comments"></i>
+          </div>
+          <h3 class="text-xl font-bold mb-3">Collaborative Tickets</h3>
+          <p class="text-gray-600 mb-4">
+            Work together with your team through comments, mentions, and shared notes on every ticket.
+          </p>
+          <a href="#" class="text-blue-500 font-medium inline-flex items-center">
+            Learn more <i class="fas fa-arrow-right ml-2"></i>
+          </a>
+        </div>
+        
+        <!-- Feature 3 -->
+        <div class="feature-card bg-white p-8 rounded-xl">
+          <div class="text-blue-500 mb-6 text-4xl">
+            <i class="fas fa-chart-line"></i>
+          </div>
+          <h3 class="text-xl font-bold mb-3">Advanced Analytics</h3>
+          <p class="text-gray-600 mb-4">
+            Get insights into your support performance with detailed reports and customizable metrics.
+          </p>
+          <a href="#" class="text-blue-500 font-medium inline-flex items-center">
+            Learn more <i class="fas fa-arrow-right ml-2"></i>
+          </a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Demo Section -->
+  <section id="demo" class="gradient-bg text-white py-20">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="flex flex-col md:flex-row items-center">
+        <div class="md:w-1/2 mb-10 md:mb-0 md:pr-10">
+          <h2 class="text-3xl md:text-4xl font-bold mb-6">See QuickDesk in Action</h2>
+          <p class="text-xl mb-8 opacity-90">
+            Watch our 2-minute product tour to see how QuickDesk can transform your customer support workflow.
+          </p>
+          <ul class="space-y-4">
+            <li class="flex items-start">
+              <i class="fas fa-check-circle text-green-300 mt-1 mr-3"></i>
+              <span>Reduce response times by 40%</span>
+            </li>
+            <li class="flex items-start">
+              <i class="fas fa-check-circle text-green-300 mt-1 mr-3"></i>
+              <span>Improve customer satisfaction scores</span>
+            </li>
+            <li class="flex items-start">
+              <i class="fas fa-check-circle text-green-300 mt-1 mr-3"></i>
+              <span>Gain valuable insights into support trends</span>
+            </li>
+          </ul>
+        </div>
+        <div class="md:w-1/2 relative">
+          <div class="bg-black rounded-xl overflow-hidden shadow-2xl">
+            <div class="aspect-w-16 aspect-h-9">
+              <img src="https://via.placeholder.com/800x450?text=Product+Demo+Video" alt="Demo Video" class="w-full h-full object-cover">
+            </div>
+            <div class="absolute inset-0 flex items-center justify-center">
+              <button class="bg-white bg-opacity-90 rounded-full w-16 h-16 flex items-center justify-center hover:bg-opacity-100 transition" aria-label="Play Demo Video">
+                <i class="fas fa-play text-blue-600 text-xl"></i>
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Testimonials -->
+  <section id="testimonials" class="py-20 bg-gray-50">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="text-center mb-16">
+        <h2 class="text-3xl md:text-4xl font-bold mb-4">What Our Customers Say</h2>
+        <p class="text-xl text-gray-600 max-w-2xl mx-auto">
+          Don't just take our word for it - hear from teams who use QuickDesk every day
+        </p>
+      </div>
+      
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+        <!-- Testimonial 1 -->
+        <div class="bg-white p-8 rounded-xl shadow-sm">
+          <div class="flex items-center mb-4">
+            <div class="text-yellow-400 mr-2">
+              <i class="fas fa-star"></i>
+              <i class="fas fa-star"></i>
+              <i class="fas fa-star"></i>
+              <i class="fas fa-star"></i>
+              <i class="fas fa-star"></i>
+            </div>
+            <span class="text-gray-500 text-sm">2 weeks ago</span>
+          </div>
+          <p class="text-gray-700 mb-6">
+            "QuickDesk has completely transformed our support operations. We've reduced our average response time from 12 hours to just 2 hours!"
+          </p>
+          <div class="flex items-center">
+            <img src="https://randomuser.me/api/portraits/women/43.jpg" alt="Sarah Johnson" class="w-12 h-12 rounded-full mr-4">
+            <div>
+              <h4 class="font-bold">Sarah Johnson</h4>
+              <p class="text-gray-500 text-sm">Support Manager, TechCorp</p>
+            </div>
+          </div>
+        </div>
+        
+        <!-- Testimonial 2 -->
+        <div class="bg-white p-8 rounded-xl shadow-sm">
+          <div class="flex items-center mb-4">
+            <div class="text-yellow-400 mr-2">
+              <i class="fas fa-star"></i>
+              <i class="fas fa-star"></i>
+              <i class="fas fa-star"></i>
+              <i class="fas fa-star"></i>
+              <i class="fas fa-star"></i>
+            </div>
+            <span class="text-gray-500 text-sm">1 month ago</span>
+          </div>
+          <p class="text-gray-700 mb-6">
+            "The real-time collaboration features are game-changers. Our team can now resolve complex issues 30% faster."
+          </p>
+          <div class="flex items-center">
+            <img src="https://randomuser.me/api/portraits/men/32.jpg" alt="Michael Chen" class="w-12 h-12 rounded-full mr-4">
+            <div>
+              <h4 class="font-bold">Michael Chen</h4>
+              <p class="text-gray-500 text-sm">CTO, StartupHub</p>
+            </div>
+          </div>
+        </div>
+        
+        <!-- Testimonial 3 -->
+        <div class="bg-white p-8 rounded-xl shadow-sm">
+          <div class="flex items-center mb-4">
+            <div class="text-yellow-400 mr-2">
+              <i class="fas fa-star"></i>
+              <i class="fas fa-star"></i>
+              <i class="fas fa-star"></i>
+              <i class="fas fa-star"></i>
+              <i class="fas fa-star-half-alt"></i>
+            </div>
+            <span class="text-gray-500 text-sm">3 months ago</span>
+          </div>
+          <p class="text-gray-700 mb-6">
+            "Switching to QuickDesk was the best decision we made last year. The analytics alone have helped us optimize our team."
+          </p>
+          <div class="flex items-center">
+            <img src="https://randomuser.me/api/portraits/women/65.jpg" alt="Emma Rodriguez" class="w-12 h-12 rounded-full mr-4">
+            <div>
+              <h4 class="font-bold">Emma Rodriguez</h4>
+              <p class="text-gray-500 text-sm">Director of CX, GlobalSoft</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- CTA Section -->
+  <section class="gradient-bg text-white py-20">
+    <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+      <h2 class="text-3xl md:text-4xl font-bold mb-6">Ready to Transform Your Support?</h2>
+      <p class="text-xl mb-10 max-w-2xl mx-auto opacity-90">
+        Join thousands of teams who trust QuickDesk to deliver exceptional customer support experiences.
+      </p>
+      <div class="flex flex-col sm:flex-row justify-center gap-4">
+        <a href="register.html" class="btn-primary bg-white text-blue-600 px-8 py-4 rounded-lg font-semibold text-lg hover:bg-gray-100">
+          Start Free Trial
+        </a>
+        <a href="#" class="btn-outline border-white text-white px-8 py-4 rounded-lg font-semibold text-lg hover:bg-white hover:bg-opacity-10">
+          Contact Sales
+        </a>
+      </div>
+      <p class="mt-6 text-blue-100">No credit card required • 14-day free trial</p>
+    </div>
+  </section>
+
+  <!-- Footer -->
+  <footer class="bg-gray-900 text-gray-400 py-16">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="grid grid-cols-2 md:grid-cols-5 gap-8">
+        <div class="col-span-2">
+          <div class="flex items-center mb-6">
+            <img src="assets/logo.svg" alt="QuickDesk Logo" class="h-8 w-8 mr-2">
+            <span class="text-xl font-bold text-white">QuickDesk</span>
+          </div>
+          <p class="mb-6">
+            Modern help desk software designed to help teams deliver exceptional customer support.
+          </p>
+          <div class="flex space-x-4">
+            <a href="#" class="text-gray-400 hover:text-white" aria-label="Twitter">
+              <i class="fab fa-twitter text-xl"></i>
+            </a>
+            <a href="#" class="text-gray-400 hover:text-white" aria-label="LinkedIn">
+              <i class="fab fa-linkedin text-xl"></i>
+            </a>
+            <a href="#" class="text-gray-400 hover:text-white" aria-label="Facebook">
+              <i class="fab fa-facebook text-xl"></i>
+            </a>
+            <a href="#" class="text-gray-400 hover:text-white">
+              <i class="fab fa-github text-xl"></i>
+            </a>
+          </div>
+        </div>
+        
+        <div>
+          <h3 class="text-white font-semibold mb-4">Product</h3>
+          <ul class="space-y-2">
+            <li><a href="#" class="hover:text-white">Features</a></li>
+            <li><a href="#" class="hover:text-white">Pricing</a></li>
+            <li><a href="#" class="hover:text-white">Integrations</a></li>
+            <li><a href="#" class="hover:text-white">Updates</a></li>
+          </ul>
+        </div>
+        
+        <div>
+          <h3 class="text-white font-semibold mb-4">Resources</h3>
+          <ul class="space-y-2">
+            <li><a href="#" class="hover:text-white">Documentation</a></li>
+            <li><a href="#" class="hover:text-white">Help Center</a></li>
+            <li><a href="#" class="hover:text-white">Community</a></li>
+            <li><a href="#" class="hover:text-white">Webinars</a></li>
+          </ul>
+        </div>
+        
+        <div>
+          <h3 class="text-white font-semibold mb-4">Company</h3>
+          <ul class="space-y-2">
+            <li><a href="#" class="hover:text-white">About Us</a></li>
+            <li><a href="#" class="hover:text-white">Careers</a></li>
+            <li><a href="#" class="hover:text-white">Contact</a></li>
+            <li><a href="#" class="hover:text-white">Blog</a></li>
+          </ul>
+        </div>
+      </div>
+      
+      <div class="border-t border-gray-800 mt-12 pt-8 flex flex-col md:flex-row justify-between items-center">
+        <p>© 2023 QuickDesk. All rights reserved.</p>
+        <div class="flex space-x-6 mt-4 md:mt-0">
+          <a href="#" class="hover:text-white">Privacy Policy</a>
+          <a href="#" class="hover:text-white">Terms of Service</a>
+          <a href="#" class="hover:text-white">Cookies</a>
+        </div>
+      </div>
+    </div>
+  </footer>
+
+  <script>
+    // Mobile menu toggle
+    document.querySelector('.md\\:hidden').addEventListener('click', function() {
+      const menu = document.querySelector('.md\\:flex');
+      menu.classList.toggle('hidden');
+      menu.classList.toggle('flex');
+    });
+    
+    // Smooth scrolling for anchor links
+    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+      anchor.addEventListener('click', function (e) {
+        e.preventDefault();
+        document.querySelector(this.getAttribute('href')).scrollIntoView({
+          behavior: 'smooth'
+        });
+      });
+    });
+  </script>
+</body>
+</html>
